@@ -1,0 +1,13 @@
+{
+  "name": "y",
+  "version": "y",
+  "description": "y",
+  "main": "y",
+  "repository": "y",
+  "author": "y",
+  "license": "y",
+  "scripts": {
+    "eth": "docker compose up",
+    "g": "docker compose up -f docker-compose-guardian.yaml"
+  }
+}

@@ -1,0 +1,38 @@
+services:
+  eth2:
+    build:
+      context: .
+      dockerfile: Dockerfile.eth
+    ports:
+      - "8546:8546"
+    command:
+      - npx
+      - ganache-cli
+      - -e 10000
+      - --deterministic
+      - --time="1970-01-01T00:00:00+00:00"
+      - --host=0.0.0.0
+      - --chainId=1397
+      - --port=8546
+
+  eth2-deploy:
+    build:
+      context: .
+      dockerfile: Dockerfile.eth
+    command:
+      - /bin/sh
+      - -c
+      - "./wait-for-it.sh -t 0 eth2:8546 -- sed -i 's/CHAIN_ID=0x2/CHAIN_ID=0x4/g' .env && mkdir -p build/contracts && cp node_modules/@openzeppelin/contracts/build/contracts/* build/contracts/ && npx truffle migrate --network development2 && npx truffle exec scripts/deploy_test_token.js --network development2 && npx truffle exec scripts/register_eth_chain.js --network development2 && nc -lkp 2000 0.0.0.0"
+    depends_on:
+      - eth2
+
+  eth2-mine:
+    build:
+      context: .
+      dockerfile: Dockerfile.eth
+    command:
+      - /bin/sh
+      - -c
+      - "npx truffle exec mine.js --network development2"
+    depends_on:
+      - eth2
