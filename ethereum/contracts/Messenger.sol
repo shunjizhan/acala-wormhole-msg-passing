@@ -9,7 +9,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract Messenger is Ownable {
     // Hardcode the Wormhole Core Bridge contract address
     // In a real contract, we would set this in a constructor or Setup
-    address a = address(0xC89Ce4735882C9F0f0FE26686c53074E09B0D550);
+
+    address a = address(0xC89Ce4735882C9F0f0FE26686c53074E09B0D550);     // nonce 4, BSC 
+    // address a = address(0xa51EE1845C13Cb03FcA998304b00EcC407fc1F92);        // nonce 4, mandala
     IWormhole _wormhole = IWormhole(a);
 
     mapping(bytes32 => bool) _completedMessages;

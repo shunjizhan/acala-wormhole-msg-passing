@@ -8,6 +8,6 @@
   "license": "y",
   "scripts": {
     "eth": "docker compose up",
-    "g": "docker compose up -f docker-compose-guardian.yaml"
+    "guard": "docker rm -vf $(docker ps -a | grep guardian | awk '{print $1}') && docker-compose -f docker-compose-guardian.yaml -- up"
   }
 }

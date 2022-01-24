@@ -1,11 +1,13 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
+// const mnemonicPhrase = 'fox sight canyon orphan hotel grow hedgehog build bless august weather swarm';  // mandala
+const mnemonicPhrase = 'myth like bonus scare over problem client lizard pioneer submit female collect';  // fake eth mandala
 
 module.exports = {
   networks: {
     development: {
       provider: () =>
-        new HDWalletProvider(['0xa872f6cbd25a0e04a08b1e21098017a9e6194d101d75e13111f71410c59cd57f'], 'http://localhost:8545'),
+        new HDWalletProvider(mnemonicPhrase, 'http://localhost:8545'),
       host: "127.0.0.1",
       port: 8545,
       network_id: 595,

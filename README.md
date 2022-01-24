@@ -1,11 +1,11 @@
 ## Run
 ### run nodes
-- run a mandala node at 8545
-- run a eth node at 8546: `yarn eth`
-- run a guardian: `yarn g`
+- run a mandala node listening to http:8545 and ws:8545
+- run a eth node listening to http:8546 and ws:8546: `yarn eth`
+- run a guardian: `yarn guard`
+- send some token from `0x75E480dB528101a381Ce68544611C169Ad7EB342` to `0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1` from metamask, since we will use `0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1` as our dev account. 
 
 ### deploy contracts
-
 ```bash
 cd ethereum
 yarn
