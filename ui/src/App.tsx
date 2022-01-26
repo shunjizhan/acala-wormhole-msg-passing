@@ -52,7 +52,7 @@ interface SentVaaData {
 const WORMHOLE_RPC_HOSTS = ["http://localhost:7071"];
 
 const chainToNetworkDec = (c: ChainId) =>
-  c === 2 ? 1337 : c === 4 ? 1397 : 0;
+  c === 2 ? 595 : c === 4 ? 1397 : 0;
 
 const chainToNetwork = (c: ChainId) =>
   hexStripZeros(hexlify(chainToNetworkDec(c)));
@@ -62,7 +62,7 @@ const chainToContract = (c: ChainId) =>
 
 const chainToName = (c: ChainId) =>
   c === 2
-    ? "Ethereum"
+    ? "Mandala"
     : c === 4
     ? "BSC"
     : "Unknown";
@@ -85,6 +85,7 @@ const switchProviderNetwork = async(provider: Web3Provider, chainId: ChainId) =>
   const cNetwork = await provider.getNetwork();
   // This is workaround for when Metamask fails to switch network.
   if(cNetwork.chainId !== chainToNetworkDec(chainId)) {
+    console.log(cNetwork.chainId, chainToNetworkDec(chainId));
         console.log('switchProviderNetwork did not work');
         throw new Error("Metamask could not switch network");
   }
@@ -130,7 +131,7 @@ function Chain({
           vaaData.bytes,
           nonce
         );
-        const sendReceipt = await sendTx.wait();
+        const sendReceipt = await sendTx.wait(0);
         console.log(sendReceipt);
         setResultText('Success: ' + Buffer.from(vaaData.vaa.payload).toString());
       } catch (e) {
@@ -147,7 +148,9 @@ function Chain({
     if (!signer || !provider) return;
     (async () => {
       try {
+        console.log('switch provider', chainId);
         await switchProviderNetwork(provider, chainId);
+
         const Messenger = Messenger__factory.connect(
           chainToContract(chainId),
           signer
@@ -158,17 +161,23 @@ function Chain({
           new Uint8Array(bytesToSend),
           nonce
         );
-        const sendReceipt = await sendTx.wait();
+        console.log('send tx', sendTx);
+        const sendReceipt = await sendTx.wait(0);
+        console.log('receipt: ', sendReceipt);
+
         const sequence = parseSequenceFromLogEth(
           sendReceipt,
           await Messenger.wormhole()
         );
+
+        console.log('getSignedVAAWithRetry', chainId, getEmitterAddressEth(chainToContract(chainId)), sequence.toString());
         const { vaaBytes } = await getSignedVAAWithRetry(
           WORMHOLE_RPC_HOSTS,
           chainId,
           getEmitterAddressEth(chainToContract(chainId)),
           sequence.toString()
         );
+        console.log('vaa result: ', vaaBytes);
         const { parse_vaa } = await importCoreWasm();
         addMessage({vaa:parse_vaa(vaaBytes), bytes:vaaBytes});
       } catch (e) {
@@ -261,7 +270,7 @@ function App() {
       <Box sx={{ display: "flex" }}>
         <Box sx={{ flexBasis: "66%" }}>
           <Chain
-            name="Ethereum"
+            name="Mandala"
             chainId={CHAIN_ID_ETH}
             addMessage={addMessage}
             getSelectedVaa={getSelectedVaa}
